@@ -1,0 +1,39 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Evaluate this weekend project to learn about making a ai harness. I plan on using vs code with Claude. Plan:This is a great starting point for your weekend build. Since you are an experienced UX designer, this project is less about the "AI" and more about **governance and confidence**.\
+Here is how to structure your POC for maximum learning and future-proofing:\
+### The Architecture: "The Governor Pattern"\
+Don't build a black-box agent. Build a **Governor**\'97a system that sits between the raw email and your brain.\
+#### 1. The Data Pipeline (The "Plumbing")\
+ * **Source:** Use the **Gmail API** to fetch only the metadata of the last 20-50 unread messages (list + get methods). Do not fetch the full thread body for everything; fetch headers to build your list.\
+ * **The Filter:** Create a simple local config.json (or a database table) where you store "Known Senders" (e.g., your bank, your boss, your spouse). Anything from these sources bypasses the AI and goes straight to your "Important" list.\
+#### 2. The Intelligence Layer (The "Evaluator")\
+ * **Prompting:** You want the AI to act as a **classifier**, not a writer.\
+ * **Structure:** Use a **Zod** schema (or standard JSON schema) to force the output. Your schema should look like this:\
+   * category: enum['urgent', 'newsletter', 'personal', 'notification']\
+   * confidence_score: number (0.0 to 1.0)\
+   * summary: string (max 10 words)\
+ * **Why this schema?** Because the confidence_score is the key to your UX. If the AI is only 40% confident, you handle it differently than if it's 99% confident.\
+#### 3. The UX Layer (The "Control Surface")\
+As a designer, this is your territory. Build a simple **Next.js** view that renders your inbox with:\
+ * **The Confidence Badge:** Show a small percentage next to the label (e.g., "Urgent - 98%").\
+ * **The "Human-in-the-Loop" Override:** If the AI labels a newsletter as "Urgent," provide a "Retrain" button that sends the email back to the engine with a note (e.g., "This is a newsletter") so you can store this as a preference for next time.\
+ * **Batch Action:** Add a "Bulk Archive All Newsletters" button. This is your first taste of **agentic execution**.\
+### Your Weekend Roadmap\
+| Day | Focus | Goal |\
+|---|---|---|\
+| **Friday** | **Connectors** | Authenticate with Gmail API. Fetch a list of unread emails and log them to your terminal/console as JSON. |\
+| **Saturday** | **Governor Logic** | Pass those JSON objects through an LLM. Implement your Zod/JSON schema and get back a structured classification. |\
+| **Sunday** | **Interface** | Build a minimal Next.js dashboard to display this data. Add an "Archive" button that talks back to the Gmail API. |\
+### Why this is a "Harness" and not just a "Brain":\
+ * **It has memory:** You are building a system that learns your definition of "noise."\
+ * **It has boundaries:** It doesn't send replies; it only organizes the inbox.\
+ * **It is auditable:** You can see exactly what the AI classified and why, because you designed the UI to display the confidence_score and summary.\
+**Pro-tip for a UX professional:** Don't try to make the UI look like a "dashboard." Make it look like a **triage tool**. Use white space. Give the user "Action Buttons" rather than "Chat Bubbles." The most successful agentic UX feels less like a conversation and more like a high-end control room.\
+**Does this plan provide enough structure for your weekend, or would you like a specific snippet of the Zod schema/Prompt structure to get your classification engine started?**\
+}
